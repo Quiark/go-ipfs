@@ -102,3 +102,7 @@ func (p *Path) IsValid() error {
 	_, err := ParsePath(p.String())
 	return err
 }
+
+func NormalizeOsPath(pth string) string {
+	return strings.Replace(pth, "\\", "/", -1)
+}

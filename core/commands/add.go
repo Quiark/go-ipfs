@@ -20,6 +20,7 @@ import (
 	"github.com/ipfs/go-ipfs/importer/chunk"
 	dag "github.com/ipfs/go-ipfs/merkledag"
 	dagutils "github.com/ipfs/go-ipfs/merkledag/utils"
+	ippath "github.com/ipfs/go-ipfs/path"
 	pin "github.com/ipfs/go-ipfs/pin"
 	ft "github.com/ipfs/go-ipfs/unixfs"
 	u "github.com/ipfs/go-ipfs/util"
@@ -362,6 +363,7 @@ func (params *adder) addNode(node *dag.Node, path string) error {
 		path = key.Pretty()
 	}
 
+	path = ippath.NormalizeOsPath(path)
 	if err := params.editor.InsertNodeAtPath(params.ctx, path, node, newDirNode); err != nil {
 		return err
 	}
@@ -440,7 +442,7 @@ func (params *adder) addDir(file files.File) (*dag.Node, error) {
 		if node != nil {
 			_, name := path.Split(file.FileName())
 
-			err = tree.AddNodeLink(name, node)
+			err = tree.AddNodeLink(ippath.NormalizeOsPath(name), node)
 			if err != nil {
 				return nil, err
 			}
